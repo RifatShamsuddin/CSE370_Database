@@ -102,7 +102,7 @@ SELECT major, COUNT(*) FROM lab_grades GROUP BY major;
 SELECT major, COUNT(*) FROM lab_grades WHERE days_present <10 GROUP BY major;
 SELECT major, COUNT(*) FROM lab_grades GROUP BY major HAVING COUNT(*)>2;
 
-
+Homework 3
 Query1: SELECT DISTINCT multiplier FROM users ORDER BY multiplier DESC;
 Query2: SELECT id,influence_count FROM users ORDER BY influence_count;
 Query3: SELECT DISTINCT member_since FROM users ORDER BY member_since;
