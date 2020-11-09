@@ -48,7 +48,7 @@ Exit
 
 create table users(member_id varchar(5), Name varchar(50), email varchar(50), influence_count int, member_since date, multiplier int);
 
-insert into users values 
+insert into users values
 ('1','Taylor Otwell','otwell@laravel.com',739360,'2020-06-10',10),
 ('2','Ryan Dahl','ryan@nodejs.org',633632,'2020-04-22',10),
 ('3','Brendan Eich','eich@javascript.com',939570,'2020-05-07',8),
@@ -118,3 +118,33 @@ Query12:SELECT COUNT(*) FROM users;
 Query13:SELECT COUNT(DISTINCT multiplier) FROM users;
 Query14:SELECT COUNT(*),multiplier FROM users WHERE member_since BETWEEN '2020-04-1' AND '2020-04-30' GROUP BY multiplier;
 Query15:SELECT name,multiplier FROM users WHERE influence_count>=700000 AND multiplier%2=0 ORDER BY name DESC;
+
+LAB 4:
+select max(cgpa) from lab_grades;
+
+Nested Queries, Finding the name of the max CGPA
+select Name from lab_grades where cgpa = (select max(cgpa) from lab_grades);
+
+Find the name who has the max CGPA of each dept
+SELECT name, major, cgpa from lab_grades Where (major,cgpa) IN (Select major,max(cgpa) From Lab_grades Group by major);
+
+Select cgpa from lab_grades Where major = 'CS';
+Select cgpa from lab_grades Where major = 'CSE';
+Select cgpa from lab_grades Where major = 'ECE';
+
+Select a student from CS whose CGPA is greater than the ones in CSE
+Select name,cgpa from lab_grades Where major ='CS' AND cgpa>ANY (SELECT cgpa FROM lab_grades Where major='CSE');
+Select name,cgpa from lab_grades Where major ='CS' AND cgpa>ALL (SELECT cgpa FROM lab_grades Where major='CSE');
+
+SELECT DISTINCT MAJOR FROM Lab_grades L1 Where EXISTS (Select * From Lab_grades L2 Where L2.Major=L1.Major AND L2.cgpa<3.7);
+SELECT Name,cgpa,Std_ID FROM Lab_grades L1 Where not EXISTS (Select * From Lab_grades L2 Where L2.Std_ID!=L1.Std_ID AND L2.Project_marks>L1.Project_marks);
+
+
+Homework 4
+Query1: SELECT employee_id, last_name, email, salary, department_id FROM employees WHERE (salary,department_id) IN (Select department_id, MAX(salary) FROM employees GROUP BY department_id);
+Query2: SELECT employee_id, last_name, email, commission_pct, department_id FROM employees WHERE (commission_pct,department_id) IN (SELECT department_id, MAX(commission_pct) FROM employees GROUP BY department_id);
+Query3: SELECT employee_id, last_name, email, commission_pct, department_id FROM employees WHERE (commission_pct,department_id) IN (SELECT department_id, MIN(commission_pct) FROM employees GROUP BY department_id);
+Query4: SELECT employee_id, last_name, email, commission_pct, department_id FROM employees WHERE department_id =5 AND commission_pct>ALL (SELECT commission_pct FROM employees WHERE department_id=7);
+Query5: SELECT employee_id, last_name, email, salary, department_id FROM employees WHERE department_id =5 AND commission_pct>ANY (SELECT salary FROM employees WHERE department_id=7);
+Query6: SELECT department_id, job_id, salary FROM employees WHERE salary<ANY (SELECT job_id, salary FROM employees GROUP BY department_id);
+Query7:
