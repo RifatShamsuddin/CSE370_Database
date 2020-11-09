@@ -116,7 +116,7 @@ Query10:SELECT id FROM users WHERE email Like '%djangoproject%';
 Query11:SELECT name,email FROM users ORDER BY member_since DESC LIMIT 5;
 Query12:SELECT COUNT(*) FROM users;
 Query13:SELECT COUNT(DISTINCT multiplier) FROM users;
-Query14:SELECT COUNT(*),multiplier FROM users WHERE member_since BETWEEN '2020-04-1' AND '2020-04-30' GROUP BY multiplier;
+Query14:SELECT COUNT(*),multiplier FROM users WHERE member_since>'2020-04-30' GROUP BY multiplier;
 Query15:SELECT name,multiplier FROM users WHERE influence_count>=700000 AND multiplier%2=0 ORDER BY name DESC;
 
 LAB 4:
