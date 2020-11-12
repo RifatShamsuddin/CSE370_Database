@@ -145,7 +145,7 @@ Query1: SELECT employee_id, last_name, email, salary, department_id FROM employe
 Query2: SELECT employee_id, last_name, email, commission_pct, department_id FROM employees WHERE (commission_pct,department_id) IN (SELECT department_id, MAX(commission_pct) FROM employees GROUP BY department_id);
 Query3: SELECT employee_id, last_name, email, commission_pct, department_id FROM employees WHERE (commission_pct,department_id) IN (SELECT department_id, MIN(commission_pct) FROM employees GROUP BY department_id);
 Query4: SELECT employee_id, last_name, email, commission_pct, department_id FROM employees WHERE department_id =5 AND commission_pct>ANY (SELECT commission_pct FROM employees WHERE department_id=7);
-Query5: SELECT employee_id, last_name, email, salary, department_id FROM employees WHERE department_id =5 AND salary>ALL (SELECT salary FROM employees WHERE department_id=7);
+Query5: SELECT employee_id, last_name, email, salary, department_id FROM employees WHERE department_id =5 AND salary>ANY (SELECT salary FROM employees WHERE department_id=7);
 Query6: SELECT department_id, job_id, salary FROM employees WHERE salary<ANY (SELECT job_id, salary FROM employees GROUP BY department_id);
 Query7: SELECT manager_id FROM employees L1 WHERE EXISTS (SELECT * FROM employees L2 Where L2.manager_id=L1.manager_id AND L2.salary<2500);
 Query8: SELECT manager_id FROM employees L1 WHERE EXISTS (SELECT * FROM employees L2 Where L2.manager_id=L1.manager_id AND L2.commission_pct<18.25);
