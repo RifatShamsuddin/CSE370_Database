@@ -146,8 +146,140 @@ Query2: SELECT employee_id, last_name, email, commission_pct, department_id FROM
 Query3: SELECT employee_id, last_name, email, commission_pct, department_id FROM employees WHERE (commission_pct,department_id) IN (SELECT department_id, MIN(commission_pct) FROM employees GROUP BY department_id);
 Query4: SELECT employee_id, last_name, email, commission_pct, department_id FROM employees WHERE department_id =5 AND commission_pct>ANY (SELECT commission_pct FROM employees WHERE department_id=7);
 Query5: SELECT employee_id, last_name, email, salary, department_id FROM employees WHERE department_id =5 AND salary>ANY (SELECT salary FROM employees WHERE department_id=7);
-Query6: SELECT department_id, job_id, salary FROM employees WHERE salary<ANY (SELECT MAX(salary) FROM employees GROUP BY department_id);
-Query7: SELECT manager_id FROM employees L1 WHERE EXISTS (SELECT * FROM employees L2 Where L2.manager_id=L1.manager_id AND L2.salary<2500);
-Query8: SELECT manager_id FROM employees L1 WHERE EXISTS (SELECT * FROM employees L2 Where L2.manager_id=L1.manager_id AND L2.commission_pct<18.25);
-Query9: SELECT manager_id FROM employees L1 WHERE NOT EXISTS (SELECT * FROM employees L2 Where L2.manager_id=L1.manager_id AND L2.salary<3500);
-Query10:SELECT manager_id FROM employees L1 WHERE NOT EXISTS (SELECT * FROM employees L2 Where L2.manager_id=L1.manager_id AND L2.commission_pct<45.05);
+Query6: SELECT department_id, job_id, salary FROM employees L1 WHERE salary < any ( SELECT salary FROM employees L2 WHERE L1.job_id != L2.job_id and L1.department_id = L2.department_id);
+Query7: SELECT DISTINCT manager_id FROM employees L1 WHERE EXISTS (SELECT * FROM employees L2 Where L2.manager_id=L1.manager_id AND L2.salary<2500);
+Query8: SELECT DISTINCT manager_id FROM employees L1 WHERE EXISTS (SELECT * FROM employees L2 Where L2.manager_id=L1.manager_id AND L2.commission_pct<18.25);
+Query9: SELECT DISTINCT manager_id FROM employees L1 WHERE NOT EXISTS (SELECT * FROM employees L2 Where L2.manager_id=L1.manager_id AND L2.salary<3500);
+Query10:SELECT DISTINCT manager_id FROM employees L1 WHERE NOT EXISTS (SELECT * FROM employees L2 Where L2.manager_id=L1.manager_id AND L2.commission_pct<45.05);
+
+How to write primary key
+Creat table Course (Course_name varchar(100), Course_number varchar(10), Credit_hours int, Department varchar(5), Primary Key(Course_number));
+
+Combining two column to write primary Key
+Creat table Grade_Report(
+
+  Primary Key(Student_number, Section_identifier)
+);
+
+Foreign Key
+Creat table Grade_Report(
+
+  Primary Key(Student_number, Section_identifier)
+  Foreign Key(Student_number) references Student(Student_number),
+  Foreign Key(Section_identifier) references Section(Section_identifier)
+);
+
+Update
+Creat table Grade_Report(
+
+  Primary Key(Student_number, Section_identifier)
+  Foreign Key(Student_number) references Student(Student_number),
+  Foreign Key(Section_identifier) references Section(Section_identifier) On Update Cascade/Restrict/Set Null On Deete Cascade
+);
+
+
+Join
+- Inner Join
+Select S.Name, GR.Grade froem Student S Inner Join Grade_Report GR on S.Student_number=GR.Student_Number;
+-If there is a data that doesnt exist in
+
+Select S.Name GR.Grade from Student S Inner Join Grade_Report GR on S.Student_number=G.Student_number Where section identifier = 85;
+
+
+-Left Join
+Select S.Name, GR.Grade froem Student S Left Join Grade_Report GR on S.Student_number=GR.Student_Number;
+
+Select S.Name, GR.Grade, Se.Section_identifier FROM(
+  Student S inner join Grade_Report GR on S.Student_Number=G.Student_Number) inner Join Section Se
+  on Se.Section_idetifier = GR.Section_idetifier Where Se.Course_number="CS1310";
+
+)
+
+Select S.Name, GR.Grade, Se.Section_idetifier from Student S, Grade_Report GR, Section Se WHERE
+S.Student_Number=G.Student_Number and Se.Section_idetifier=GR.Section_idetifier and Se.Course_number="CSE1310";
+
+
+
+Bank database
+
+Create database Bank;
+use Bank;
+
+create table customer (customer_id varchar(10) not null, customer_name varchar(20) not null,
+customer_street varchar(30), customer_city varchar(30), primary key (customer_id)) ;
+
+create table branch (branch_name varchar(15), branch_city varchar(30), assets int, primary key
+(branch_name), check (assets >= 0)) ;
+
+create table account(
+branch_name varchar(15),
+account_number varchar(10) not null,
+balance int,
+primary key (account_number),
+check (balance >= 0)) ;
+
+create table loan
+(loan_number varchar(10) not null,
+branch_name varchar(15),
+amount int,
+primary key (loan_number));
+
+create table depositor
+(customer_id varchar(10) not null,
+account_number varchar(10) not null,
+primary key (customer_id,account_number),
+foreign key (customer_id) references customer(customer_id),
+foreign key (account_number) references account(account_number));
+
+create table borrower (customer_id varchar(10) not null,
+loan_number varchar(10) not null,
+primary key (customer_id, loan_number),
+foreign key (customer_id) references customer(customer_id),
+foreign key (loan_number) references loan(loan_number));
+
+insert into customer values
+('C-101','Jones', 'Main', 'Harrison'), ('C-201','Smith', 'North', 'Rye'),('C-211','Hayes', 'Main',
+'Harrison'), ('C-212','Curry', 'North', 'Rye'),('C-215','Lindsay', 'Park', 'Pittsfield'),('C-220','Turner',
+'Putnam', 'Stamford'),('C-222','Williams', 'Nassau', 'Princeton'),('C-225','Adams', 'Spring',
+'Pittsfield'),('C-226','Johnson', 'Alma', 'Palo Alto'),('C-233','Glenn', 'Sand Hill', 'Woodside'),('C234','Brooks', 'Senator', 'Brooklyn'),('C-255','Green', 'Walnut', 'Stamford');
+
+insert into branch values
+('Downtown', 'Brooklyn',9000000), ('Redwood', 'Palo Alto',2100000), ('Perryridge',
+'Horseneck',1700000), ('Mianus', 'Horseneck',400000), ('Round Hill', 'Horseneck',8000000),
+('Pownal', 'Bennington',300000), ('North Town', 'Rye',3700000), ('Brighton',
+'Brooklyn',7100000);
+
+insert into account values
+('Downtown','A-101',500), ('Mianus','A-215',700) ,('Perryridge','A-102',400), ('Round Hill','A305',350), ('Brighton','A-201',900), ('Redwood','A-222',700), ('Brighton','A-217',750);
+
+insert into loan values
+('L-17', 'Downtown', 1000),('L-23', 'Redwood', 2000), ('L-15', 'Perryridge', 1500), ('L-14',
+'Downtown', 1500), ('L-93', 'Mianus', 500), ('L-11', 'Round Hill', 900), ('L-16', 'Perryridge',
+1300);
+
+insert into depositor values
+('C-226', 'A-101'), ('C-201', 'A-215'), ('C-211', 'A-102'), ('C-220', 'A-305'), ('C-226', 'A-201'), ('C-101', 'A-217'),('C-215', 'A-222');
+
+insert into borrower values
+('C-101', 'L-17'), ('C-201', 'L-23'), ('C-211', 'L-15'), ('C-226', 'L-14'), ('C-212', 'L-93'), ('C-201', 'L-11'), ('C-222', 'L-17'), ('C-225', 'L-16');
+
+Join
+Select * from Customer C inner join Depositor D on C.customer_id=D.customer_id;
+
+Select C.customer_id, C.customer_city,D.account_number from Customer C inner join Depositor D on C.customer_id=D.customer_id;
+Select C.customer_id, C.customer_city,C.customer_name, A.account_number, A.balance, A.branch_name from ()
+
+
+HW 4
+Query1: Select C.customer_name, C.customer_city, L.branch_name from Customer C, Loan L, borrower B Where C.customer_id=B.customer_id and B.loan_number=L.loan_number and L.branch_name="Perryridge";
+Query2: Select branch_name, assets, branch_city from Branch B1 where B1.assets>ANY(Select assets From Branch B2 where B2.branch_city="Brooklyn"); and B1.branch_city!="Brooklyn";
+Query3: Select branch_name, assets, branch_city from Branch B1 where B1.assets>ALL(Select assets From Branch B2 where B2.branch_city="Horseneck") and B1.branch_city!="Horseneck";
+Query4: Select * from Loan Order by amount ASC, loan_number DESC;
+Query5: Select branch_name from Branch B Where Exists (Select * from account A where A.branch_name=B.branch_name and balance>=700);
+Query6: Select C.customer_name, A.account_number from Customer C, Depositor D, Account A Where C.customer_id=D.customer_id and D.account_number=A.account_number Order by A.balance DESC Limit 3;
+Query7: Select C.customer_name from Branch B, Account A, Depositor D, customer C where B.branch_name=A.branch_name and A.account_number=D.account_number and D.customer_id=C.customer_id and A.branch_name in
+(Select B.branch_name from Branch B, Account A, Depositor D, customer C where B.branch_name=A.branch_name and A.account_number=D.account_number and D.customer_id=C.customer_id and C.customer_name="Johnson");
+Query8: Select customer_name from customer C, Depositor D, Account A where C.customer_id=D.customer_id and A.account_number=D.account_number and A.branch_name="Mianus" and customer_name not in
+(Select customer_name from customer C, borrower B, loan L where C.customer_id=B.customer_id and L.loan_number=B.loan_number and L.branch_name="Mianus");
+Query9: Select B.branch_name from Branch B, Account A where B.branch_name=A.branch_name and Exists (Select COUNT(*) From Depositor D, Account A, Branch B where B.branch_name=A.branch_name and A.account_number=D.account_number Group by B.branch_name);
+Query10:Select COUNT(C.customer_name) From Depositor D, Account A, Branch B where B.branch_name=A.branch_name and A.account_number=D.account_number and C.customer and B.branch_name="Palo Alto";
