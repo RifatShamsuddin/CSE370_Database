@@ -44,7 +44,7 @@ Select Name, (Project_marks+Days_present*5/12) AS total_Marks From lab_grades;
 Exit
 
 
-----HOMEWORK-----
+----TEST-----
 
 create table users(member_id varchar(5), Name varchar(50), email varchar(50), influence_count int, member_since date, multiplier int);
 
@@ -68,7 +68,7 @@ Query4: SELECT name,email, member_since,(1-(multiplier*influence_count/20000000)
 Query5: SELECT name,email, member_since,(1-(multiplier*influence_count/20000000)) AS Ranking FROM users;
 
 
-WEEK 3
+--3
 SELECT UPPER(Name) FROM lab_grades;
 
 SELECT * FROM lab_grades;
@@ -102,7 +102,7 @@ SELECT major, COUNT(*) FROM lab_grades GROUP BY major;
 SELECT major, COUNT(*) FROM lab_grades WHERE days_present <10 GROUP BY major;
 SELECT major, COUNT(*) FROM lab_grades GROUP BY major HAVING COUNT(*)>2;
 
-Homework 3
+--3
 Query1: SELECT DISTINCT multiplier FROM users ORDER BY multiplier DESC;
 Query2: SELECT id,influence_count FROM users ORDER BY influence_count;
 Query3: SELECT DISTINCT member_since FROM users ORDER BY member_since;
@@ -119,7 +119,7 @@ Query13:SELECT COUNT(DISTINCT multiplier) FROM users;
 Query14:SELECT COUNT(*),multiplier FROM users WHERE member_since>'2020-04-30' GROUP BY multiplier;
 Query15:SELECT name,multiplier FROM users WHERE influence_count>=700000 AND multiplier%2=0 ORDER BY name DESC;
 
-LAB 4:
+--4
 select max(cgpa) from lab_grades;
 
 Nested Queries, Finding the name of the max CGPA
@@ -140,7 +140,7 @@ SELECT DISTINCT MAJOR FROM Lab_grades L1 Where EXISTS (Select * From Lab_grades 
 SELECT Name,cgpa,Std_ID FROM Lab_grades L1 Where not EXISTS (Select * From Lab_grades L2 Where L2.Std_ID!=L1.Std_ID AND L2.Project_marks>L1.Project_marks);
 
 
-Homework 4
+--4
 Query1: SELECT employee_id, last_name, email, salary, department_id FROM employees WHERE (department_id, salary) IN (Select department_id, MAX(salary) FROM employees GROUP BY department_id);
 Query2: SELECT employee_id, last_name, email, commission_pct, department_id FROM employees WHERE (commission_pct,department_id) IN (SELECT department_id, MAX(commission_pct) FROM employees GROUP BY department_id);
 Query3: SELECT employee_id, last_name, email, commission_pct, department_id FROM employees WHERE (commission_pct,department_id) IN (SELECT department_id, MIN(commission_pct) FROM employees GROUP BY department_id);
@@ -161,7 +161,7 @@ Creat table Grade_Report(
   Primary Key(Student_number, Section_identifier)
 );
 
-Foreign Key
+--Foreign Key
 Creat table Grade_Report(
 
   Primary Key(Student_number, Section_identifier)
@@ -169,7 +169,7 @@ Creat table Grade_Report(
   Foreign Key(Section_identifier) references Section(Section_identifier)
 );
 
-Update
+--Update
 Creat table Grade_Report(
 
   Primary Key(Student_number, Section_identifier)
@@ -178,15 +178,15 @@ Creat table Grade_Report(
 );
 
 
-Join
-- Inner Join
+--Join
+-- Inner Join
 Select S.Name, GR.Grade froem Student S Inner Join Grade_Report GR on S.Student_number=GR.Student_Number;
 -If there is a data that doesnt exist in
 
 Select S.Name GR.Grade from Student S Inner Join Grade_Report GR on S.Student_number=G.Student_number Where section identifier = 85;
 
 
--Left Join
+---Left Join
 Select S.Name, GR.Grade froem Student S Left Join Grade_Report GR on S.Student_number=GR.Student_Number;
 
 Select S.Name, GR.Grade, Se.Section_identifier FROM(
@@ -200,7 +200,7 @@ S.Student_Number=G.Student_Number and Se.Section_idetifier=GR.Section_idetifier 
 
 
 
-Bank database
+--Bank database
 
 Create database Bank;
 use Bank;
@@ -270,7 +270,7 @@ Select C.customer_id, C.customer_city,D.account_number from Customer C inner joi
 Select C.customer_id, C.customer_city,C.customer_name, A.account_number, A.balance, A.branch_name from ()
 
 
-HW 4
+-- 4
 Query1: Select C.customer_name, C.customer_city, L.branch_name from Customer C, Loan L, borrower B Where C.customer_id=B.customer_id and B.loan_number=L.loan_number and L.branch_name="Perryridge";
 Query2: Select branch_name, assets, branch_city from Branch B1 where B1.assets>ANY(Select assets From Branch B2 where B2.branch_city="Brooklyn"); and B1.branch_city!="Brooklyn";
 Query3: Select branch_name, assets, branch_city from Branch B1 where B1.assets>ALL(Select assets From Branch B2 where B2.branch_city="Horseneck") and B1.branch_city!="Horseneck";
