@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Timezone Converter</title>
+    <script>
+        function convertTime() {
+            var sourceTimezone = document.getElementById("timezone").value;
+            var destinationTimezone = document.getElementById("convert_timezone").value;
+            var selectedTime = document.getElementById("time").value;
+
+            try {
+                // Parse the input time
+                var inputTime;
+                if (selectedTime === "now") {
+                    inputTime = new Date();
+                } else {
+                    inputTime = new Date("1970-01-01T" + selectedTime + ":00");
+                }
+
+                // Perform timezone conversion
+                var sourceOffset = getTimezoneOffset(sourceTimezone);
+                var destinationOffset = getTimezoneOffset(destinationTimezone);
+
+                var convertedTime = new Date(inputTime.getTime() + (destinationOffset - sourceOffset) * 60000);
+
+                // Format the converted time
+                var formattedConvertedTime = convertedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                // Update the converted time display
+                document.getElementById("convertedTime").textContent = "Converted Time: " + formattedConvertedTime;
+            } catch (error) {
+                document.getElementById("convertedTime").textContent = "Invalid time format";
+            }
+        }
+
+function getTimezoneOffset(timezone) {
+    var now = new Date();
+    var localOffset = now.getTimezoneOffset();
+
+    if (timezone === "New York Time (GMT-4)") {
+        return -4 * 60; // Offset for GMT-4 in minutes
+    } else if (timezone === "Dhaka Time (GMT+6)") {
+        return 6 * 60; // Offset for GMT+6 in minutes
+    } else {
+        return 0; // No offset for the same timezone
+    }
+}
+
+        function getCurrentTime() {
+            var now = new Date();
+            var currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.getElementById("time").value = currentTime;
+        }
+    </script>
+</head>
+<body>
+    <h1>Timezone Converter</h1>
+
+    <label for="timezone">Select Source Timezone:</label>
+    <select id="timezone">
+        <option value="Local Time">Local Time</option>
+        <option value="New York Time (GMT-4)">New York Time (GMT-4)</option>
+        <option value="Dhaka Time (GMT+6)">Dhaka Time (GMT+6)</option>
+    </select>
+
+    <br><br>
+
+    <label for="convert_timezone">Select Destination Timezone:</label>
+    <select id="convert_timezone">
+        <option value="New York Time (GMT-4)">New York Time (GMT-4)</option>
+        <option value="Dhaka Time (GMT+6)">Dhaka Time (GMT+6)</option>
+    </select>
+
+    <br><br>
+
+    <label for="time">Enter Time (HH:MM):</label>
+    <input type="text" id="time">
+
+    <button onclick="getCurrentTime()">Now</button>
+
+    <br><br>
+
+    <button onclick="convertTime()">Convert Time</button>
+
+    <br><br>
+
+    <p id="convertedTime"></p>
+</body>
+</html>
